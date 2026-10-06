@@ -13,16 +13,16 @@ alpha = np.array([
 hartree_to_ev = 27.2114
 
 # Number of basis functions
-n = len(alpha)
+N = len(alpha)
 
 # Initialize matrices
-S = np.zeros((n, n))
-T = np.zeros((n, n))
-A = np.zeros((n, n))
+S = np.zeros((N, N))
+T = np.zeros((N, N))
+A = np.zeros((N, N))
 
 # Fill the matrices
-for p in range(n):
-    for q in range(n):
+for p in range(N):
+    for q in range(N):
         S[p, q] = (np.pi / (alpha[p] + alpha[q]))**(3/2)
 
         T[p, q] = (
@@ -41,10 +41,13 @@ r = np.linspace(0, 5, 500)
 # Exact hydrogen 1s wave function in atomic units
 psi_exact = (1 / np.sqrt(np.pi)) * np.exp(-r)
 
+# Exact density of probability 1s wave function in atomic units
+dens_exact = 4 * np.pi * r**2 * np.abs(psi_exact)**2
+
 # Plot
 plt.figure(figsize=(8, 6))
 
-for N in range(1, n + 1):
+for N in range(1, N + 1):
     # Truncated matrices
     H_N = H[:N, :N]
     S_N = S[:N, :N]
@@ -65,14 +68,16 @@ for N in range(1, n + 1):
     for p in range(N):
         psi_N += C[p] * np.exp(-alpha[p] * r**2)
 
+    # density of probability
+    dens = 4 * np.pi * r**2 * np.abs(psi_N)**2
     # Plot
-    plt.plot(r, psi_N, label=f"N = {N}")
+    plt.plot(r, dens, label=f"N = {N}")
 
 # Plot exact wave function
-plt.plot(r, psi_exact, '--', label="Exact 1s")
+plt.plot(r, dens_exact, '--', label="Exact 1s")
 
 plt.xlabel("r (a0)")
-plt.ylabel(r"$\psi(r)$")
+plt.ylabel(r"$P(r)$")
 plt.title("Variational hydrogen wave function")
 plt.legend()
 plt.grid(True)
