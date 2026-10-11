@@ -13,7 +13,7 @@ alpha = np.array([
 hartree_to_ev = 27.2114
 
 # Number of basis functions
-N = len(alpha)
+N = np.len(alpha)
 
 # Initialize matrices
 S = np.zeros((N, N))
